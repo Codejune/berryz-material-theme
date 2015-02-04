@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Codejune WebStorage Upload Form</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="robots" content="noindex, nofollow" />
+	</head>
+
+	<body bgcolor="#FFFFFF" style='margin:0'>
+		<div style='margin:0px; font-size:10pt;'>
+			<form method="post" name="uploadForm" enctype="multipart/form-data">
+				<input type="file" name="uploadfile" size="60" class="text"/>
+				<input type="submit" value="Upload" class="button" onClick='return onUpload();' />
+			</form>
+		</div>
+		<script language="JavaScript" type="text/javascript">
+///////////////////////////
+// http://kldp.net/snippet/detail.php?type=snippet&id=43
+String.prototype.trim = function()
+{
+	var pattern = !arguments[0] ?
+			/^\s+|\s+$/g :
+			new RegExp('^['+arguments[0]+']+|['+arguments[0]+']+$', 'g');
+
+	return this.replace(pattern, '');
+}
+
+// 초기화
+var uniqueKey = '[' + Math.random() + ']';
+var loc       = "" + document.location;
+var urlPath   = loc.substr(loc.indexOf("#")+1)
+document.uploadForm.action = urlPath + "?action=Upload&key="+uniqueKey;
+
+// 업로드 버튼이 눌렸을 때
+function onUpload()
+{
+	var localPath = document.uploadForm.uploadfile.value;
+	if( localPath.trim() == "" )
+	{
+		alert("업로드할 파일을 선택해 주세요.");
+		return false;
+	}
+	else
+	{
+		var pattern  = new RegExp('.*[\\\\/]', 'g');
+		var filename = localPath.replace(pattern, '');
+
+		parent.onBeginUpload(filename, uniqueKey);
+		return true;
+	}
+}
+
+		</script>
+
+	</body>
+</html>

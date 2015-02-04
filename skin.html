@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Codejune WebStorage</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="robots" content="noindex, nofollow" />
+		<link rel="icon" type="image/x-icon" id="page_favicon" href="/$skin/images/favicon.ico?action=SkinFile" />
+    	<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/$skin/dist/css/ripples.min.css?action=SkinFile" rel="stylesheet">
+        <link href="/$skin/dist/css/material-wfont.min.css?action=SkinFile" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="/$skin/css/style.css?action=SkinFile" />
+		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script type="text/javascript" src="/$skin/js/common.js?action=SkinFile"></script>
+		<script type="text/javascript" src="/$skin/js/sortabletable.js?action=SkinFile"></script>
+	</head>
+	<body>
+		<div class="navbar navbar-material-lightgreen">
+       		<div class="navbar-header">
+            	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                	<span class="icon-bar"></span>
+                	<span class="icon-bar"></span>
+                	<span class="icon-bar"></span>
+            	</button>
+            <a class="navbar-brand" href="/">Codejune WebStorage</a>
+        </div>
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+        	<ul class="nav navbar-nav">
+           		<li onClick="onMkdir()"><a href="javascript:void(0)">폴더 생성</a></li>
+            	<li onclick="OnPlugin('Rename');"><a href="javascript:void(0)">파일명 변경</a></li>
+            	<li onclick="OnPlugin('Delete');"><a href="javascript:void(0)">삭제</a></li>
+        	</ul>
+        	<ul class="nav navbar-nav navbar-right">
+            	<li class="dropdown">
+            		#if( $current_login_id )
+						<a class="dropdown-toggle" data-toggle="dropdown" href=".?action=Logout" class="btn btn-flat btn-primary">$current_login_id<b class="caret"></b></a>
+					#else
+						<a class="dropdown-toggle" data-toggle="dropdown" href=".?action=Login" class="btn btn-flat btn-primary">로그인<b class="caret"></b></a>
+					#end
+                	<ul class="dropdown-menu">
+                		#if( $current_login_id )
+							<li><a href='.?action=Logout'>로그아웃</a></li>
+						#else
+							<li><a href='.?action=Login'>로그인</a><li>
+						#end
+                	</ul>
+            	</li>
+        	</ul>
+        </div>
+		<div id="wrap">
+			<div id="container">
+				<div class="top">
+				</div>
+				<div class="middle">
+					<div class="jumbotron">
+						#if( $content )
+							$content
+								#if( $content_hide_back_button )
+								#else
+									<p class="text-primary">해당 폴더에 접근 할 수 없습니다.<br> 로그인 확인 후 다시 접속 해 주세요.</p>
+									<a href='/' class="btn btn-primary">홈으로 이동</a>
+								#end
+						#end
+						#if( $show_files )
+						<form id="pluginForm" method="POST" action=""><input type="HIDDEN" name="selectedFiles" value=""></form>
+						<form id="fileListForm" style="margin:0; padding:0;">
+							<input type="hidden" name="checkboxes" style="margin:0;"/>
+							<table class="sortable" cellspacing="0">
+								<thead>
+									#if( $files )
+									<tr>
+										<div style="margin: 0 auto;">
+										<div style="float:left;"><th class="checkbox1"><input type="CHECKBOX" name="selectAllCheckbox" onClick="ToggleSelectAll();"/></th></div>
+											#if( $display_upper )
+												<a href=".." class="btn btn-primary btn-raised">상위폴더</a>
+											#else
+											#end
+										<div style="float:left;"><th>모두선택</th></div>
+										<div class="btn-group" style="float:right;">
+    										<a href="javascript:void(0)" class="btn btn-primary">추가기능</a>
+    										<a href="javascript:void(0)" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+    										<ul class="dropdown-menu">
+        										<li><a href="javascript:void(0)" onclick="OnPlugin('ZIPdownload')"; class="btn btn-primary btn-raised";>ZIP 으로 압축</a></li>
+        										<li><a href="javascript:void(0)" onclick="OnPlugin('RARdownload');" class="btn btn-primary btn-raised";>RAR 으로 압축</a></li>
+        										<li><a href="javascript:void(0)" onclick="OnPlugin('playlist.asx');" class="btn btn-primary btn-raised";>ASX 으로 스트리밍</a></li>
+    										</ul>
+										</div>
+									</div>
+									</tr>
+									#else
+									#end
+								</thead>
+								<tbody>
+									#foreach( $files )
+										<tr class="fileentry" id="tr#$link">
+											<td class="checkbox1"><input type='checkbox' name="checkbox#$link" value="$link" onClick='HighlightRow("$link", this.checked)'/></td>
+											#if ( $is_folder )
+												<td class="filelist">
+													<a href="$link"><span class="folder"><font color="#000000">$name</font></span></a> 
+													<div style="float: right;"><a href="$link" onclick="copy_trackback(this.href); return false;"><img src="/$skin/images/folder_link.png?action=SkinFile" width="16" height="16" alt="url" align="absmiddle" /></a></div>
+												</td>
+											#else
+												<td class="filelist">
+												<a href="$link"><font color="#000000">$name</font></a><span class="size"> / <span id="cvtsize[]">$size</span></span><a href="$link" onclick="copy_trackback(this.href); return false;">
+												<div style="float: right;"><img src="/$skin/images/page_white_link.png?action=SkinFile" width="16" height="16" alt="url" align="absmiddle" /></a></div>
+											</td>
+											#end
+										</tr>
+									#end
+
+									#if( $files )
+									#else
+										<tr><p class="text-primary" align="center">빈 폴더</p></tr>
+									#end
+								</tbody>
+							</table>
+						</form>
+					#end
+				</div>
+			</div> <!-- middle close -->
+			<div class="bottom">
+			<!--넣고싶은 소스를 넣으세요-->
+			    <div id="disqus_thread"></div>
+    			<script type="text/javascript">
+        		/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        			var disqus_shortname = 'decompilews'; // required: replace example with your forum shortname
+
+        			/* * * DON'T EDIT BELOW THIS LINE * * */
+        			(function() {
+          				var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        			})();
+    			</script>
+    			<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+				<script type="text/javascript">
+    			/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    				var disqus_shortname = 'decompilews'; // required: replace example with your forum shortname
+
+    				/* * * DON'T EDIT BELOW THIS LINE * * */
+    				(function () {
+        				var s = document.createElement('script'); s.async = true;
+        				s.type = 'text/javascript';
+        				s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        				(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    				}());
+    			</script>
+			</div>
+		</div> <!-- container close -->
+		<div id="footer">
+			<div class="info">
+			#if( $files )
+				현재 폴더 크기: <span id="cvtsize[]">$total_size</span>
+				<br>
+			#end	
+	 	  	#if( $free_space )
+				디스크 여유 공간:<span id="cvtsize[]">$free_space</span>
+      	      	<br>
+      	   	#end
+     	   	#if ( $version )
+      	        프로그램 버전 : $version
+      	        <br>
+			#end 
+			Powered by <a href="http://berryz.upnl.org/webshare" target="_blank" title="v$version (rev.$revision)">Berryz Webshare</a>. / Skin by <a href="http://github.com/codejune/" target="_blank">Codejune</a>
+			<br>
+			<a href="https://github.com/FezVrasta/bootstrap-material-design" target="_blank">MatrialDesign for Bootstrap</a>
+			</div>  
+		</div><!-- footer close -->
+		<a class="fixed">
+			<button class="btn btn-fab btn-raised btn-material-lime" onClick="window.open('/$skin/upload_frame.html?action=SkinFile#$upload_path*$skin','_blank','width=400,height=200,toolbar=no,status=no,resizable=no');"><i><img src="/$skin/images/ic_add_grey.png?action=SkinFile" width="28" height="28"></i></button>
+		</a>
+		#if( $upload_path )
+			<div style="visibility:hidden">
+				<form method="GET" action="." name="MkdirForm">
+					<input type="hidden" name="action" value="MakeDirectory">
+					<input type="hidden" name="name">
+				</form>
+			</div>
+		#end
+		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <script src="/$skin/dist/js/ripples.min.js?action=SkinFile"></script>
+    	<script src="/$skin/dist/js/material.min.js?action=SkinFile"></script>
+        <script>
+      		$.material.init();
+    	</script>
+		<script src="/$skin/common.js?action=SkinFile"></script>
+		<script src="/$skin/sortabletable.js?action=SkinFile"></script>
+    	<script type="text/javascript">
+		//용량 단위 변환 JS - http://blog.naver.com/ddworld/30137189886
+		function byteConvertor(bytes) {
+			bytes = parseInt(bytes.replace(/,/gi, ''));
+			if (bytes > 0) {
+				var s = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+				var e = Math.floor(Math.log(bytes)/Math.log(1024));
+
+				if(e >= s.length) e = s.length - 1;//s의 마지막 단위로 표시할 수 없이 크다면, 마지막 단위로 처리
+
+				else if(e == "-Infinity") return "0 " + s[0];
+				else return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
+			}
+			else {
+				return "0 bytes";
+			}
+		}
+		function onloadConvertor() {
+			var conobj = document.all['cvtsize[]'];
+			if (conobj.length > 1) {
+				for (var i=0; i<conobj.length; i++) {
+					conobj[i].innerHTML = byteConvertor(conobj[i].innerHTML);
+				}
+			}
+			else conobj.innerHTML = byteConvertor(conobj.innerHTML);
+			}
+			onloadConvertor();
+		</script>
+	</body>
+</html>

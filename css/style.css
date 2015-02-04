@@ -1,0 +1,62 @@
+html, body { font-size: 13px;  background: #009688; }
+
+
+a { color: #fff; text-decoration: none; 
+-moz-transition: all .3s ease, margin .3s ease;
+-webkit-transition: all .3s ease, margin .3s ease;
+-o-transition: all .3s ease, margin .3s ease;
+-ms-transition: all .3s ease, margin .3s ease;
+transition: all .3s ease, margin .3s ease;
+}
+
+
+/*
+ * wrap
+ */
+#wrap { width: 100%; margin: 0; padding: 0; background: #ededed}
+
+.float-left { float: left; }
+.float-right { float: right; }
+
+#hidden_line { display: none; }
+
+/*
+ * container
+ */
+#container { max-width: 1200px; margin: 0 auto; padding: 0 3%; }
+
+/*
+ * container > top
+ */
+#container .top { clear: both; height: 28px; }
+#container .top .left { float: left; list-style: none; }
+#container .top .left li { float: left; }
+#container .top .right { float: right; }
+#container .top .right li { float: left; list-style: none; }
+
+/*
+ * container > middle > file list
+ */
+.sortable { width: 100%; color: #000;}
+.sortable th { font-weight: bold; text-align: left; padding: 9px 0 7px; background: #fff; color: #009688; }
+
+.sortable .fileentry { background: #fff; color: #000;}
+.sortable .fileentry:hover,
+.sortable .fileentry:active { background: #e0f2f1; border-left: 3px solid #009688; }
+
+.sortable .filelist { padding: 10px 5px 8px 0; font-weight: bold; word-break: break-all; color: #000; }
+.sortable .folder { background-position: 0% 50%; padding-left: 21px; background-image: url("../images/folder.png?action=SkinFile"); background-repeat: no-repeat; }
+.sortable .size { font-weight: normal; font-size: 10px; color: #009688; }
+.sortable .checkbox1 { text-align: center;}
+
+/*
+ * footer
+ */
+ #footer { width: 100%; margin-top: 20px; text-align: center; background: #009688; padding: 30px 0;}
+
+.fixed {
+  position: fixed;
+  bottom: 24px;
+  right: 16px;
+  width: 64px;
+}
