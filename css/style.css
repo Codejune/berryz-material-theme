@@ -1,7 +1,7 @@
 html, body { font-size: 13px;  background: #009688; }
 
 
-a { color: #fff; text-decoration: none; 
+a { color: #009688; text-decoration: none; 
 -moz-transition: all .3s ease, margin .3s ease;
 -webkit-transition: all .3s ease, margin .3s ease;
 -o-transition: all .3s ease, margin .3s ease;
@@ -9,6 +9,13 @@ a { color: #fff; text-decoration: none;
 transition: all .3s ease, margin .3s ease;
 }
 
+a .b { color: #fff; 
+-moz-transition: all .3s ease, margin .3s ease;
+-webkit-transition: all .3s ease, margin .3s ease;
+-o-transition: all .3s ease, margin .3s ease;
+-ms-transition: all .3s ease, margin .3s ease;
+transition: all .3s ease, margin .3s ease;
+}
 
 /*
  * wrap
